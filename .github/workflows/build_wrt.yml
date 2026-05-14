@@ -51,14 +51,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6.0.2
 
-      # ==============================================
-      # 🔥 修复脚本放在这里！最早执行！
-      # ==============================================
-      - name: Fix dockerd DEPENDS bug
-        run: |
-          mkdir -p action_build/package/feeds/packages/dockerd/
-          echo "在编译执行前，预先植入修复方案，屏蔽Docker自动更新依赖"
-          
       - name: Set Build Date and Timezone
         run: |
           sudo -E timedatectl set-timezone "Asia/Shanghai"
@@ -67,13 +59,6 @@ jobs:
 
       - name: Pre Clone
         run: ./wrt_core/pre_clone_action.sh ${{ inputs.model }}
-
-      - name: 真正修复 dockerd Makefile
-        run: |
-          cd action_build
-          [ -f package/feeds/packages/dockerd/Makefile ] && sed -i '91d' package/feeds/packages/dockerd/Makefile
-          [ -f package/feeds/packages/dockerd/Makefile ] && sed -i '/return 1/d' package/feeds/packages/dockerd/Makefile
-          echo "修复完成！"
 
       - name: Cache Dependencies
         uses: actions/cache@v5.0.2
@@ -125,9 +110,11 @@ jobs:
 
       - name: Delete Old Cache
         run: |
+          # 获取缓存列表并删除
           gh cache list --key ${{ matrix.os }}-${{ hashFiles('**/repo_flag') }}- --json key --jq '.[] | .key' | while read -r key; do
             gh cache delete "$key"
           done
+          # 输出缓存状态
           echo "========cache status========"
           echo "ccache: $(du -sh ./action_build/.ccache | cut -f 1)"
           echo "staging: $(du -sh ./action_build/staging_dir | cut -f 1)"
