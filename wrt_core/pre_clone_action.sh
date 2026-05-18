@@ -47,3 +47,10 @@ PROJECT_MIRRORS_FILE="$BUILD_DIR/scripts/projectsmirrors.json"
 if [ -f "$PROJECT_MIRRORS_FILE" ]; then
     sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
 fi
+# 应用 ath11k MTK 下行单流修复补丁
+if [ -f "$BASE_PATH/wrt_core/patches/002-fix-ath11k-mtk-downstream-nss.patch" ]; then
+    echo "Applying ath11k MTK downstream NSS fix..."
+    patch -N -p1 < "$BASE_PATH/wrt_core/patches/002-fix-ath11k-mtk-downstream-nss.patch" || true
+else
+    echo "Patch file not found, skipping..."
+fi
