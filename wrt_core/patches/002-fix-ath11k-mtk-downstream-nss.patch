@@ -1,0 +1,17 @@
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index 8a7f2d5..e3f4b89 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -4490,8 +4490,10 @@ static void ath11k_mac_sta_assoc_complete(struct ath11k_vif *vif,
+ 
+ 	ath11k_mac_sta_set_supported_rates(ar, sta);
+ 
+-	if (ath11k_sta_is_mediatek(sta))
+-		sta->nss_max_tx = 1;
++/*
++	if (ath11k_sta_is_mediatek(sta))
++		sta->nss_max_tx = 1;
++*/
+ 
+ 	ath11k_mac_sta_apply_twt_cfg(vif, sta);
+ }
